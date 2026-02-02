@@ -10,6 +10,32 @@ ATHLETE_PROFILE_PIC = f"images/athletes/{ATHLETE_ID}/profile.jpg"
 PERFORMANCE_GRAPH = f"images/athletes/{ATHLETE_ID}/performance.png"
 
 
+def build_gallery_images(athlete_id: str, base_dir: Path) -> str:
+    images_dir = base_dir / "images" / "athletes" / athlete_id
+
+    if not images_dir.exists():
+        return ""
+
+    image_tags = []
+
+    for img_path in sorted(images_dir.iterdir()):
+        if not img_path.is_file():
+            continue
+
+        if img_path.name.lower() == "profile.jpg" or img_path.name.lower() == "performance.png":
+            continue
+
+        if img_path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
+            continue
+
+        src = f"images/athletes/{athlete_id}/{img_path.name}"
+
+        image_tags.append(
+            f'<img src="{src}" alt="Athlete gallery image" loading="lazy" />'
+        )
+
+    return "\n".join(image_tags)
+
 def seconds_to_time_str(seconds):
     m = int(seconds // 60)
     s = seconds % 60
@@ -234,6 +260,8 @@ def main():
 
     template = template_path.read_text(encoding="utf-8")
 
+    gallery_html = build_gallery_images(ATHLETE_ID, base)
+
 
     graph_path = base / "images" / "athletes" / ATHLETE_ID / "performance.png"
     generate_performance_graph(records, graph_path)
@@ -247,6 +275,7 @@ def main():
             "PERSONAL_RECORD": pr,
             "ATHLETE_PROFILE_PIC": ATHLETE_PROFILE_PIC,
             "PERFORMANCE_GRAPH": PERFORMANCE_GRAPH,
+            "ATHLETE_GALLERY_IMAGES": gallery_html,
         },
     )
 
