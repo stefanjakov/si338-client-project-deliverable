@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 ATHLETE_ID = "21615274"
 ATHLETE_NAME = "Garrett Comer"
 ATHLETE_URL = f"https://www.athletic.net/athlete/{ATHLETE_ID}/cross-country/"
-ATHLETE_PROFILE_PIC = f"images/athletes/{ATHLETE_ID}/profile.jpg"
-PERFORMANCE_GRAPH = f"images/athletes/{ATHLETE_ID}/performance.png"
+ATHLETE_PROFILE_PIC = f"../../images/athletes/{ATHLETE_ID}/profile.jpg"
+PERFORMANCE_GRAPH = f"../../images/athletes/{ATHLETE_ID}/performance.png"
 
 
 def build_gallery_images(athlete_id: str, base_dir: Path) -> str:
@@ -28,7 +28,7 @@ def build_gallery_images(athlete_id: str, base_dir: Path) -> str:
         if img_path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
             continue
 
-        src = f"images/athletes/{athlete_id}/{img_path.name}"
+        src = f"../../images/athletes/{athlete_id}/{img_path.name}"
 
         image_tags.append(
             f'<img src="{src}" alt="Athlete gallery image" loading="lazy" />'
@@ -249,9 +249,10 @@ def fill_template(template, values):
 
 def main():
     base = Path(__file__).parent
-    csv_path = base / "garrett.csv"
     template_path = base / "player-template.html"
-    out_path = base / "index.html"
+    athlete_out_dir = base / "athletes" / ATHLETE_ID
+    out_path = athlete_out_dir / "index.html"
+    csv_path = athlete_out_dir / "garrett.csv"
 
     records = read_csv_after_header(csv_path)
 
