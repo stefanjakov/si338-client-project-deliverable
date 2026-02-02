@@ -1,10 +1,104 @@
 import csv
 from datetime import datetime
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 ATHLETE_ID = "21615274"
 ATHLETE_NAME = "Garrett Comer"
 ATHLETE_URL = f"https://www.athletic.net/athlete/{ATHLETE_ID}/cross-country/"
+ATHLETE_PROFILE_PIC = f"images/athletes/{ATHLETE_ID}/profile.jpg"
+PERFORMANCE_GRAPH = f"images/athletes/{ATHLETE_ID}/performance.png"
+
+
+def seconds_to_time_str(seconds):
+    m = int(seconds // 60)
+    s = seconds % 60
+    return f"{m}:{s:04.1f}"
+
+def generate_performance_graph(records, output_path: Path):
+    import re
+
+    def clean_meet_name(name: str) -> str:
+        return re.sub(r"\s*\([^)]*\)", "", name).strip()
+
+    data = []
+
+    for r in records:
+        meet_raw = safe(r, "Meet Name")
+        if meet_raw == "N/A":
+            continue
+
+        meet = clean_meet_name(meet_raw)
+
+        date = parse_date(safe(r, "Date"))
+        secs = time_to_seconds(safe(r, "Time"))
+        grade = safe(r, "Grade")
+        place = safe(r, "Overall Place")
+
+        if date is None or secs is None or not is_valid_grade(grade):
+            continue
+
+        data.append({
+            "meet": meet,
+            "date": date,
+            "secs": secs,
+            "grade": int(grade),
+            "place": place,
+        })
+
+    data.sort(key=lambda x: x["date"])
+    if not data:
+        return
+
+    grade_colors = {
+        9: "#60a5fa",
+        10: "#34d399",
+        11: "#fbbf24",
+        12: "#f87171",
+    }
+
+    x = list(range(len(data)))
+    y = [d["secs"] for d in data]
+
+    min_secs = min(y)
+    max_secs = max(y)
+    padding = 5
+
+    colors = [grade_colors.get(d["grade"], "#9ca3af") for d in data]
+
+    labels = [
+        f'{d["meet"]}\n({d["date"].strftime("%Y")})'
+        for d in data
+    ]
+
+    fig, ax = plt.subplots(figsize=(18, 6))
+
+    bars = ax.bar(x, y, color=colors)
+
+    ax.set_ylim(min_secs - padding, max_secs + padding)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=30, ha="right")
+
+    ax.set_ylabel("Time (seconds)")
+    ax.set_title("Performance Progression by Meet")
+
+    ax.margins(x=0.02)
+
+    for bar, d in zip(bars, data):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.5,
+            f'#{d["place"]}',
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+    fig.subplots_adjust(bottom=0.30)
+
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
 
 def safe(row, key, default="N/A"):
     val = (row.get(key) or "").strip()
@@ -43,6 +137,8 @@ def build_rows(records):
 
     for r in records:
         meet = safe(r, "Meet Name")
+        if meet == "N/A":
+            continue
         date = safe(r, "Date")
         location = "N/A"
         distance = "5K"
@@ -138,6 +234,10 @@ def main():
 
     template = template_path.read_text(encoding="utf-8")
 
+
+    graph_path = base / "images" / "athletes" / ATHLETE_ID / "performance.png"
+    generate_performance_graph(records, graph_path)
+
     html = fill_template(
         template,
         {
@@ -145,6 +245,8 @@ def main():
             "GRADE": grade,
             "SEASON_RECORD": sr,
             "PERSONAL_RECORD": pr,
+            "ATHLETE_PROFILE_PIC": ATHLETE_PROFILE_PIC,
+            "PERFORMANCE_GRAPH": PERFORMANCE_GRAPH,
         },
     )
 

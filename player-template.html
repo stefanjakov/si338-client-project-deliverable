@@ -17,13 +17,10 @@
 
     <div class="athlete-info">
       <h1>{{NAME}}</h1>
-      <!-- >> maybe a litle hard to generate -->
-      <!-- <img src="path/athlete_image.png" alt="Athlete profile picture" class="athlete-photo" /> -->
+      <img src="{{ATHLETE_PROFILE_PIC}}" alt="Athlete profile picture" class="athlete-photo" />
 
       <p class="athlete-school">Ann Arbor Skyline</p>
       <p class="athlete-grade">Current Grade: {{GRADE}}</p>
-      <!-- yeah this just does not matter -->
-      <!-- <p class="athlete-team">Team: Team Name</p> -->
 
       <div class="athlete-records">
         <p class="athlete-sr">Season Record (SR): {{SEASON_RECORD}}</p>
@@ -72,23 +69,24 @@
       </tbody>
     </table>
 
-    <!--   <p class="coach-comments"> -->
-    <!--     Coach Comment -->
-    <!--   </p> -->
+    <!-- this just does not exist in the csv.. -->
+    <!-- <p class="coach-comments"> -->
+    <!--   Coach Comment -->
+    <!-- </p> -->
     <!-- </section> -->
-    <!---->
-    <!-- <section id="performance-graph"> -->
-    <!--   <h2>Performance Progression</h2> -->
-    <!---->
-    <!--   <p> -->
-    <!--     This graph visualizes the athlete’s race times across the selected -->
-    <!--     filters. -->
-    <!--   </p> -->
-    <!---->
-    <!--   <canvas id="performance-chart" width="600" height="300" aria-label="Athlete performance progression graph" -->
-    <!--     role="img"></canvas> -->
-    <!-- </section> -->
-    <!---->
+
+    <section id="performance-graph">
+      <h2>Performance Progression</h2>
+
+      <p>
+        This graph visualizes the athlete’s race times across meets,
+        color-coded by grade.
+      </p>
+
+      <img src="{{PERFORMANCE_GRAPH}}" alt="Athlete performance progression graph"
+        style="max-width: 100%; height: auto;" />
+    </section>
+
     <!-- <section id="athlete-comparison"> -->
     <!--   <h2>Compare with Another Athlete</h2> -->
     <!---->
