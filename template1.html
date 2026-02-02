@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{NAME}} – Race Results</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>{{NAME}}</h1>
+    <p>Athletic.net ID: {{ATHLETE_ID}}</p>
+    <p>
+      <a href="{{ATHLETE_URL}}">Athlete page</a>
+    </p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Season Summary</h2>
+      <ul>
+        <li><strong>Total races:</strong> {{TOTAL_RACES}}</li>
+        <li><strong>Best time:</strong> {{BEST_TIME}}</li>
+        <li><strong>Most recent race:</strong> {{MOST_RECENT_DATE}} — {{MOST_RECENT_MEET}}</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>All Results</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Meet</th>
+            <th scope="col">Time</th>
+            <th scope="col">Place</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Links</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ROWS}}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Generated from Garrett’s race spreadsheet.</p>
+  </footer>
+</body>
+
+</html>
