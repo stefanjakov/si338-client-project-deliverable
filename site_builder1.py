@@ -30,8 +30,11 @@ def build_gallery_images(athlete_id: str, base_dir: Path) -> str:
 
         src = f"../../images/athletes/{athlete_id}/{img_path.name}"
 
+
+        label = img_path.stem.replace("-", " ").replace("_", " ").title()
+
         image_tags.append(
-            f'<img src="{src}" alt="Athlete gallery image" loading="lazy" />'
+            f'<img src="{src}" alt="Race gallery photo: {label}" loading="lazy" />'
         )
 
     return "\n".join(image_tags)
