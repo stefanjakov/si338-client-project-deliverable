@@ -21,11 +21,10 @@
 
   <header>
     <h1>Ann Arbor Skyline</h1>
-    <img src="path/team_logo.png" alt="Team Name logo" />
   </header>
 
   <section id="team-roster">
-    <h2>Ann Arbor Skyline Athletes</h2>
+    <h2>The Athletes</h2>
 
     <div id="sort-by-choices">
       <label for="sort-by">Sort by:</label>
@@ -90,25 +89,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>State Invitational</td>
-          <td>2024-10-12</td>
-          <td>3rd</td>
-          <td>
-            <a href="https://www.athletic.net" target="_blank">
-              View Results
-            </a>
-          </td>
-        </tr>
+        {{TEAM_EVENTS_ROWS}}
       </tbody>
     </table>
   </section>
 
+
   <section id="team-gallery">
-    <h2>Season Gallery</h2>
+    <h2>Team Gallery</h2>
     <div class="gallery-grid">
-      <img src="path/event1.jpg" alt="Team at State Invitational" />
-      <img src="path/event2.jpg" alt="Team warm-up before race" />
+      {{TEAM_GALLERY_IMAGES}}
     </div>
   </section>
 

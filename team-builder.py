@@ -361,6 +361,111 @@ def build_team_accomplishments(rows):
     return "\n".join(items)
 
 
+def build_team_events_rows(rows):
+    """
+    Build a unique set of team events across all athletes.
+    """
+    events = {}
+
+    for r in rows:
+        meet = safe(r, "Meet Name")
+        if meet == "N/A":
+            continue
+
+        date = parse_date(safe(r, "Date"))
+        place = safe(r, "Overall Place")
+        url = safe(r, "Meet Results URL", "")
+
+        place_val = int(place) if place.isdigit() else None
+
+        if meet not in events:
+            events[meet] = {
+                "date": date,
+                "best_place": place_val,
+                "url": url,
+            }
+        else:
+            if date and (events[meet]["date"] is None or date < events[meet]["date"]):
+                events[meet]["date"] = date
+
+            if place_val is not None:
+                cur = events[meet]["best_place"]
+                if cur is None or place_val < cur:
+                    events[meet]["best_place"] = place_val
+
+            if not events[meet]["url"] and url != "N/A":
+                events[meet]["url"] = url
+
+    rows_html = []
+
+    for meet, data in sorted(
+        events.items(),
+        key=lambda x: x[1]["date"] or datetime.max
+    ):
+        date_str = (
+            data["date"].strftime("%Y-%m-%d")
+            if data["date"] else "N/A"
+        )
+
+        place_str = (
+            f"{data['best_place']} place"
+            if data["best_place"] is not None else "N/A"
+        )
+
+        link_html = (
+            f'<a href="{data["url"]}" target="_blank">View Results</a>'
+            if data["url"] and data["url"] != "N/A"
+            else "N/A"
+        )
+
+        rows_html.append(
+            "<tr>"
+            f"<td>{meet}</td>"
+            f"<td>{date_str}</td>"
+            f"<td>{place_str}</td>"
+            f"<td>{link_html}</td>"
+            "</tr>"
+        )
+
+    return "\n".join(rows_html)
+
+def build_team_gallery_images(max_per_athlete=2) -> str:
+    image_tags = []
+
+    for athlete_dir in sorted(ATHLETES_DIR.iterdir()):
+        if not athlete_dir.is_dir():
+            continue
+
+        athlete_id = athlete_dir.name
+        images_dir = IMAGES_DIR / athlete_id
+
+        if not images_dir.exists():
+            continue
+
+        count = 0
+        for img_path in sorted(images_dir.iterdir()):
+            if count >= max_per_athlete:
+                break
+
+            if not img_path.is_file():
+                continue
+
+            name = img_path.name.lower()
+            if name in {"profile.jpg", "performance.png"}:
+                continue
+
+            if img_path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
+                continue
+
+            src = f"./images/athletes/{athlete_id}/{img_path.name}"
+
+            image_tags.append(
+                f'<img src="{src}" alt="Team event photo" loading="lazy" />'
+            )
+
+            count += 1
+
+    return "\n".join(image_tags)
 
 def main():
     cards = []
@@ -374,7 +479,9 @@ def main():
     cards_html = "\n".join(cards)
 
     all_records = gather_all_records()
+    events_html = build_team_events_rows(all_records)
     accomplishments_html = build_team_accomplishments(all_records)
+    gallery_html = build_team_gallery_images()
 
     athletes = gather_all_athlete_stats()
     comparison_html = build_player_comparison_html(athletes)
@@ -382,6 +489,8 @@ def main():
     template = TEAM_TEMPLATE.read_text(encoding="utf-8")
 
     html = template
+    html = html.replace("{{TEAM_GALLERY_IMAGES}}", gallery_html)
+    html = html.replace("{{TEAM_EVENTS_ROWS}}", events_html)
     html = html.replace("{{ATHLETE_CARDS}}", cards_html)
     html = html.replace("{{TEAM_ACCOMPLISHMENTS}}", accomplishments_html)
     html = html.replace("{{PLAYER_COMPARISON}}", comparison_html)
