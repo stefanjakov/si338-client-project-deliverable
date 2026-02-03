@@ -8,6 +8,17 @@
 </head>
 
 <body>
+
+  <nav id="main-nav">
+    <div class="nav-container">
+      <a href="#team-roster" class="nav-link">Roster</a>
+      <a href="#team-accomplishments" class="nav-link">Accomplishments</a>
+      <a href="#team-comparison" class="nav-link">Comparison</a>
+      <a href="#team-events" class="nav-link">Events</a>
+      <a href="#team-gallery" class="nav-link">Gallery</a>
+    </div>
+  </nav>
+
   <header>
     <h1>Ann Arbor Skyline</h1>
     <img src="path/team_logo.png" alt="Team Name logo" />
@@ -34,25 +45,36 @@
   <section id="team-accomplishments">
     <h2>Team Accomplishments</h2>
     <ul>
-      <li>Fastest Time of the Season:</li>
-      <li>Most Improved Athlete:</li>
-      <li>Etc..</li>
+      {{TEAM_ACCOMPLISHMENTS}}
     </ul>
   </section>
 
-  <section id="team-comparison">
-    <h2>Compare to Other Team</h2>
-    <form id="comparison-fields">
-      <label for="other-team-school">Other Team:</label>
-      <input type="text" id="other-team-school" name="other-team-school" placeholder="Enter school">
-      <label for="comparison-type">Comparison Type:</label>
-      <select id="comparison-type" name="comparison-type">
-        <option value="specific-meet">Specific Meet</option>
-        <option value="season">Season</option>
-        <option value="overall">Overall</option>
-      </select>
-      <button type="submit">Compare</button>
-    </form>
+  <section id="player-comparison">
+    <h2>Compare Athletes</h2>
+
+    <div class="comparison-controls">
+      <div class="comparison-select">
+        <label for="athlete-a">Athlete A:</label>
+        <select id="athlete-a" name="athlete-a">
+          {{ATHLETE_OPTIONS}}
+        </select>
+      </div>
+
+      <div class="comparison-select">
+        <label for="athlete-b">Athlete B:</label>
+        <select id="athlete-b" name="athlete-b">
+          {{ATHLETE_OPTIONS}}
+        </select>
+      </div>
+
+      <button type="button" id="compare-button">
+        Compare
+      </button>
+    </div>
+
+    <div id="comparison-results">
+      {{PLAYER_COMPARISON}}
+    </div>
   </section>
 
   <section id="team-events">

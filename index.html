@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ann Arbor Skyline</title>
+</head>
+
+<body>
+
+  <nav id="main-nav">
+    <div class="nav-container">
+      <a href="#team-roster" class="nav-link">Roster</a>
+      <a href="#team-accomplishments" class="nav-link">Accomplishments</a>
+      <a href="#team-comparison" class="nav-link">Comparison</a>
+      <a href="#team-events" class="nav-link">Events</a>
+      <a href="#team-gallery" class="nav-link">Gallery</a>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Ann Arbor Skyline</h1>
+    <img src="path/team_logo.png" alt="Team Name logo" />
+  </header>
+
+  <section id="team-roster">
+    <h2>Ann Arbor Skyline Athletes</h2>
+
+    <div id="sort-by-choices">
+      <label for="sort-by">Sort by:</label>
+      <select id="sort-by" name="sort-by">
+        <option value="name">Name</option>
+        <option value="grade">Grade</option>
+        <option value="season-record">Season Record (SR)</option>
+        <option value="personal-record">Personal Record (PR)</option>
+      </select>
+    </div>
+
+    <div id="athlete-roster">
+      
+    <div class="athlete-card"
+         data-name="Garrett Comer"
+         data-grade="11"
+         data-sr="17:22.3"
+         data-pr="17:22.3">
+
+      <div class="card-inner">
+
+        <div class="card-front">
+          <img
+            src="./images/athletes/21615274/profile.jpg"
+            alt="Garrett Comer profile picture"
+            class="athlete-photo"
+            loading="lazy"
+          />
+          <h3 class="athlete-name">Garrett Comer</h3>
+        </div>
+
+        <div class="card-back">
+          <h3 class="athlete-name">Garrett Comer</h3>
+          <p class="athlete-grade">Grade: 11</p>
+          <p class="athlete-sr">Season Record: 17:22.3</p>
+          <p class="athlete-pr">Personal Record: 17:22.3</p>
+
+          <a href="./athletes/21615274/index.html" class="athlete-link">
+            View Profile
+          </a>
+        </div>
+
+      </div>
+    </div>
+    
+    </div>
+  </section>
+
+  <section id="team-accomplishments">
+    <h2>Team Accomplishments</h2>
+    <ul>
+      <li><strong>Fastest Time:</strong> Garrett Comer — 17:22.3</li>
+<li><strong>Highest Placement:</strong> Garrett Comer — 9 place</li>
+<li><strong>Best Grade 9 Athlete:</strong> Garrett Comer — 18:24.6 PR</li>
+<li><strong>Best Grade 10 Athlete:</strong> Garrett Comer — 21:04.2</li>
+<li><strong>Best Grade 11 Athlete:</strong> Garrett Comer — 17:22.3</li>
+<li><strong>Most Meets Competed:</strong> Garrett Comer — 13 meets</li>
+    </ul>
+  </section>
+
+  <section id="player-comparison">
+    <h2>Compare Athletes</h2>
+
+    <!-- Selection UI (JS later) -->
+    <div class="comparison-controls">
+      <div class="comparison-select">
+        <label for="athlete-a">Athlete A:</label>
+        <select id="athlete-a" name="athlete-a">
+          {{ATHLETE_OPTIONS}}
+        </select>
+      </div>
+
+      <div class="comparison-select">
+        <label for="athlete-b">Athlete B:</label>
+        <select id="athlete-b" name="athlete-b">
+          {{ATHLETE_OPTIONS}}
+        </select>
+      </div>
+
+      <button type="button" id="compare-button">
+        Compare
+      </button>
+    </div>
+
+    <!-- Comparison output -->
+    <div id="comparison-results">
+      
+    <div class="comparison-cards">
+
+      <div class="comparison-card">
+        <img src="./images/athletes/21615274/profile.jpg" alt="Garrett Comer profile picture" />
+        <h3>Garrett Comer</h3>
+        <p>Grade: 11</p>
+        <p>Season Record: 17:22.3</p>
+        <p>Personal Record: 17:22.3</p>
+        <p>Meets Competed: 13</p>
+      </div>
+
+      <div class="comparison-card">
+        <img src="./images/athletes/21615274/profile.jpg" alt="Garrett Comer profile picture" />
+        <h3>Garrett Comer</h3>
+        <p>Grade: 11</p>
+        <p>Season Record: 17:22.3</p>
+        <p>Personal Record: 17:22.3</p>
+        <p>Meets Competed: 13</p>
+      </div>
+
+    </div>
+
+    
+        <div class="shared-meets">
+          <h3>Shared Meets</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Meet</th>
+                <th>Garrett Comer Place</th>
+                <th>Garrett Comer Place</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2023 Portage XC Invitational (Division 1 Reserve)</td><td>104</td><td>104</td></tr>
+<tr><td>2024 Portage Invitational</td><td>318</td><td>318</td></tr>
+<tr><td>2nd Ann Arbor City Preview presented by AARC</td><td>9</td><td>9</td></tr>
+<tr><td>37th Early Bird Open (HS Open 5K)</td><td>160</td><td>160</td></tr>
+<tr><td>39th Fr Gabriel Richard Cross Country Invite (Varsity Large School)</td><td>134</td><td>134</td></tr>
+<tr><td>Bret Clements Bath Invitational (J.V.)</td><td>23</td><td>23</td></tr>
+<tr><td>Early Bird Open (Open Men's 5K)</td><td>67</td><td>67</td></tr>
+<tr><td>Jackson Invitational - Varsity (Orange Division (1000 + enrolment))</td><td>206</td><td>206</td></tr>
+<tr><td>Lamplighter Invitational</td><td>35</td><td>35</td></tr>
+<tr><td>Post Regional Open Meet (PROM) - Springfiled Oaks</td><td>13</td><td>13</td></tr>
+<tr><td>SEC HS Championship (All Division Reserve)</td><td>44</td><td>44</td></tr>
+<tr><td>SEC Jamboree 2 (Red) (Reserve Wave 1 (<21:00))</td><td>21</td><td>21</td></tr>
+<tr><td>SEC-HS Jamboree 1 (Red/White Varsity Boys)</td><td>97</td><td>97</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+    
+    </div>
+  </section>
+
+  <section id="team-events">
+    <h2>Team Events</h2>
+
+    <table id="events-table">
+      <thead>
+        <tr>
+          <th>Race</th>
+          <th>Date</th>
+          <th>Placement</th>
+          <th>Results</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>State Invitational</td>
+          <td>2024-10-12</td>
+          <td>3rd</td>
+          <td>
+            <a href="https://www.athletic.net" target="_blank">
+              View Results
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="team-gallery">
+    <h2>Season Gallery</h2>
+    <div class="gallery-grid">
+      <img src="path/event1.jpg" alt="Team at State Invitational" />
+      <img src="path/event2.jpg" alt="Team warm-up before race" />
+    </div>
+  </section>
+
+</body>
+
+</html>

@@ -1,13 +1,43 @@
 from pathlib import Path
 import csv
 from datetime import datetime
+from collections import defaultdict
 
 BASE_DIR = Path(__file__).parent
 ATHLETES_DIR = BASE_DIR / "athletes"
+IMAGES_DIR = BASE_DIR / "images" / "athletes"
+
 TEAM_TEMPLATE = BASE_DIR / "team-template.html"
 OUTPUT_PATH = BASE_DIR / "index.html"
 
 
+
+
+def choose_default_comparison(athletes: dict):
+    DEFAULT_ID = "21615274"
+
+    a = athletes.get(DEFAULT_ID)
+    b = athletes.get(DEFAULT_ID)
+
+    if a and b:
+        return a, b
+
+    values = list(athletes.values())
+    if len(values) >= 2:
+        return values[0], values[1]
+
+    return None, None
+
+def gather_all_athlete_stats():
+    athletes = {}
+
+    for athlete_dir in ATHLETES_DIR.iterdir():
+        if athlete_dir.is_dir():
+            stats = build_athlete_stats(athlete_dir.name)
+            if stats:
+                athletes[athlete_dir.name] = stats
+
+    return athletes
 
 def safe(row, key, default="N/A"):
     val = (row.get(key) or "").strip()
@@ -47,6 +77,107 @@ def read_csv_after_header(path: Path):
 
     return list(csv.DictReader(lines[header_idx:]))
 
+
+
+def build_athlete_stats(athlete_id: str) -> dict:
+    athlete_dir = ATHLETES_DIR / athlete_id
+    csv_files = list(athlete_dir.glob("*.csv"))
+    if not csv_files:
+        return {}
+
+    records = read_csv_after_header(csv_files[0])
+    if not records:
+        return {}
+
+    pr, sr, grade = build_summary(records)
+
+    meets = {}
+    for r in records:
+        meet = safe(r, "Meet Name")
+        place = safe(r, "Overall Place")
+        if meet != "N/A" and place.isdigit():
+            meets[meet] = int(place)
+
+    return {
+        "id": athlete_id,
+        "name": safe(records[0], "Name"),
+        "grade": grade,
+        "sr": sr,
+        "pr": pr,
+        "profile_pic": f"./images/athletes/{athlete_id}/profile.jpg",
+        "meet_count": len(meets),
+        "meets": meets,
+    }
+
+def build_shared_meet_rows(a, b) -> str:
+    shared = set(a["meets"]) & set(b["meets"])
+    if not shared:
+        return ""
+
+    rows = []
+    for meet in sorted(shared):
+        rows.append(
+            "<tr>"
+            f"<td>{meet}</td>"
+            f"<td>{a['meets'][meet]}</td>"
+            f"<td>{b['meets'][meet]}</td>"
+            "</tr>"
+        )
+
+    return "\n".join(rows)
+
+def build_player_comparison_html(athletes: dict) -> str:
+    a, b = choose_default_comparison(athletes)
+    if not a or not b:
+        return "<p>Not enough athletes to compare.</p>"
+
+    shared_rows = build_shared_meet_rows(a, b)
+
+    shared_html = ""
+    if shared_rows:
+        shared_html = f"""
+        <div class="shared-meets">
+          <h3>Shared Meets</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Meet</th>
+                <th>{a['name']} Place</th>
+                <th>{b['name']} Place</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shared_rows}
+            </tbody>
+          </table>
+        </div>
+        """
+
+    return f"""
+    <div class="comparison-cards">
+
+      <div class="comparison-card">
+        <img src="{a['profile_pic']}" alt="{a['name']} profile picture" />
+        <h3>{a['name']}</h3>
+        <p>Grade: {a['grade']}</p>
+        <p>Season Record: {a['sr']}</p>
+        <p>Personal Record: {a['pr']}</p>
+        <p>Meets Competed: {a['meet_count']}</p>
+      </div>
+
+      <div class="comparison-card">
+        <img src="{b['profile_pic']}" alt="{b['name']} profile picture" />
+        <h3>{b['name']}</h3>
+        <p>Grade: {b['grade']}</p>
+        <p>Season Record: {b['sr']}</p>
+        <p>Personal Record: {b['pr']}</p>
+        <p>Meets Competed: {b['meet_count']}</p>
+      </div>
+
+    </div>
+
+    {shared_html}
+    """
 
 def build_summary(records):
     dated_rows = []
@@ -99,21 +230,136 @@ def build_athlete_card(athlete_id: str) -> str:
         return ""
 
     records = read_csv_after_header(csv_files[0])
+    if not records:
+        return ""
+
+    name = safe(records[0], "Name", "Athlete")
     pr, sr, grade = build_summary(records)
 
-    name = records[0].get("Name", "Athlete")
-    link = f"./athletes/{athlete_id}/index.html"
+    profile_pic = f"./images/athletes/{athlete_id}/profile.jpg"
+    athlete_link = f"./athletes/{athlete_id}/index.html"
 
     return f"""
-    <div class="athlete-card">
-      <a href="{link}" class="athlete-name">{name}</a>
-      <div class="athlete-meta">
-        <span class="athlete-grade">Grade: {grade}</span>
-        <span class="athlete-sr">SR: {sr}</span>
-        <span class="athlete-pr">PR: {pr}</span>
+    <div class="athlete-card"
+         data-name="{name}"
+         data-grade="{grade}"
+         data-sr="{sr}"
+         data-pr="{pr}">
+
+      <div class="card-inner">
+
+        <div class="card-front">
+          <img
+            src="{profile_pic}"
+            alt="{name} profile picture"
+            class="athlete-photo"
+            loading="lazy"
+          />
+          <h3 class="athlete-name">{name}</h3>
+        </div>
+
+        <div class="card-back">
+          <h3 class="athlete-name">{name}</h3>
+          <p class="athlete-grade">Grade: {grade}</p>
+          <p class="athlete-sr">Season Record: {sr}</p>
+          <p class="athlete-pr">Personal Record: {pr}</p>
+
+          <a href="{athlete_link}" class="athlete-link">
+            View Profile
+          </a>
+        </div>
+
       </div>
     </div>
     """
+
+
+
+def gather_all_records():
+    rows = []
+
+    for athlete_dir in ATHLETES_DIR.iterdir():
+        if not athlete_dir.is_dir():
+            continue
+
+        csv_files = list(athlete_dir.glob("*.csv"))
+        if not csv_files:
+            continue
+
+        rows.extend(read_csv_after_header(csv_files[0]))
+
+    return rows
+
+
+def build_team_accomplishments(rows):
+    items = []
+
+    fastest = None
+    fastest_row = None
+    for r in rows:
+        secs = time_to_seconds(safe(r, "Time"))
+        if secs is not None and (fastest is None or secs < fastest):
+            fastest = secs
+            fastest_row = r
+
+    if fastest_row:
+        items.append(
+            f"<li><strong>Fastest Time:</strong> "
+            f"{fastest_row['Name']} — {fastest_row['Time']}</li>"
+        )
+
+    best_place = None
+    best_place_row = None
+    for r in rows:
+        p = safe(r, "Overall Place")
+        if p.isdigit():
+            p = int(p)
+            if best_place is None or p < best_place:
+                best_place = p
+                best_place_row = r
+
+    if best_place_row:
+        items.append(
+            f"<li><strong>Highest Placement:</strong> "
+            f"{best_place_row['Name']} — {best_place} place</li>"
+        )
+
+    best_by_grade = {}
+
+    for r in rows:
+        g = safe(r, "Grade")
+        secs = time_to_seconds(safe(r, "Time"))
+
+        if not is_valid_grade(g) or secs is None:
+            continue
+
+        g = int(g)
+        if g not in best_by_grade or secs < best_by_grade[g][0]:
+            best_by_grade[g] = (secs, r)
+
+    for grade in sorted(best_by_grade):
+        _, r = best_by_grade[grade]
+        items.append(
+            f"<li><strong>Best Grade {grade} Athlete:</strong> "
+            f"{r['Name']} — {r['Time']}</li>"
+        )
+
+    meet_counts = defaultdict(int)
+    for r in rows:
+        name = safe(r, "Name")
+        meet = safe(r, "Meet Name")
+        if name != "N/A" and meet != "N/A":
+            meet_counts[name] += 1
+
+    if meet_counts:
+        top = max(meet_counts, key=lambda name: meet_counts[name])
+        items.append(
+            f"<li><strong>Most Meets Competed:</strong> "
+            f"{top} — {meet_counts[top]} meets</li>"
+        )
+
+    return "\n".join(items)
+
 
 
 def main():
@@ -125,12 +371,23 @@ def main():
             if card:
                 cards.append(card)
 
+    cards_html = "\n".join(cards)
+
+    all_records = gather_all_records()
+    accomplishments_html = build_team_accomplishments(all_records)
+
+    athletes = gather_all_athlete_stats()
+    comparison_html = build_player_comparison_html(athletes)
+
     template = TEAM_TEMPLATE.read_text(encoding="utf-8")
-    html = template.replace("{{ATHLETE_CARDS}}", "\n".join(cards))
+
+    html = template
+    html = html.replace("{{ATHLETE_CARDS}}", cards_html)
+    html = html.replace("{{TEAM_ACCOMPLISHMENTS}}", accomplishments_html)
+    html = html.replace("{{PLAYER_COMPARISON}}", comparison_html)
 
     OUTPUT_PATH.write_text(html, encoding="utf-8")
-    print("Team roster generated")
-
+    print("Team page generated → index.html")
 
 if __name__ == "__main__":
     main()
