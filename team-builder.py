@@ -10,8 +10,28 @@ IMAGES_DIR = BASE_DIR / "images" / "athletes"
 TEAM_TEMPLATE = BASE_DIR / "team-template.html"
 OUTPUT_PATH = BASE_DIR / "index.html"
 
+def html_escape(text: str) -> str:
+    if text is None:
+        return ""
+    return (
+        str(text)
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
+def build_athlete_options(athletes: dict, selected_id: str | None = None) -> str:
+    options = []
 
+    for athlete_id, a in sorted(athletes.items(), key=lambda x: x[1]["name"]):
+        selected = " selected" if athlete_id == selected_id else ""
+        options.append(
+            f'<option value="{athlete_id}"{selected}>{a["name"]}</option>'
+        )
+
+    return "\n".join(options)
 
 def choose_default_comparison(athletes: dict):
     DEFAULT_ID = "21615274"
@@ -41,7 +61,8 @@ def gather_all_athlete_stats():
 
 def safe(row, key, default="N/A"):
     val = (row.get(key) or "").strip()
-    return val if val else default
+    val = val if val else default
+    return html_escape(val)
 
 
 def parse_date(d):
@@ -484,12 +505,22 @@ def main():
     gallery_html = build_team_gallery_images()
 
     athletes = gather_all_athlete_stats()
+
+    a_default, _ = choose_default_comparison(athletes)
+    default_id = a_default["id"] if a_default else None
+
+    athlete_options_html = build_athlete_options(
+        athletes,
+        selected_id=default_id
+    )
+
     comparison_html = build_player_comparison_html(athletes)
 
     template = TEAM_TEMPLATE.read_text(encoding="utf-8")
 
     html = template
     html = html.replace("{{TEAM_GALLERY_IMAGES}}", gallery_html)
+    html = html.replace("{{ATHLETE_OPTIONS}}", athlete_options_html)
     html = html.replace("{{TEAM_EVENTS_ROWS}}", events_html)
     html = html.replace("{{ATHLETE_CARDS}}", cards_html)
     html = html.replace("{{TEAM_ACCOMPLISHMENTS}}", accomplishments_html)

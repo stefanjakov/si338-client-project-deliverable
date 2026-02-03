@@ -129,9 +129,23 @@ def generate_performance_graph(records, output_path: Path):
     fig.savefig(output_path, dpi=150)
     plt.close(fig)
 
+
+def html_escape(text: str) -> str:
+    if text is None:
+        return ""
+    return (
+        str(text)
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
+
 def safe(row, key, default="N/A"):
     val = (row.get(key) or "").strip()
-    return val if val else default
+    val = val if val else default
+    return html_escape(val)
 
 
 def read_csv_after_header(path: Path):

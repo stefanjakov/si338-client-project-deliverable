@@ -21,6 +21,8 @@
 
   <header id="athlete-header">
     <article class="athlete-info">
+      <h2>Athlete Information</h2>
+
       <h1>{{NAME}}</h1>
 
       <img src="{{ATHLETE_PROFILE_PIC}}" alt="Athlete profile picture" class="athlete-photo" />
@@ -68,7 +70,7 @@
       </aside>
 
       <article>
-        <h3 class="visually-hidden">Results Table</h3>
+        <h3>Race Results Table</h3>
 
         <table id="results-table">
           <thead>
@@ -114,6 +116,8 @@
       </aside>
 
       <article>
+        <h3>Performance Graph</h3>
+
         <img src="{{PERFORMANCE_GRAPH}}" alt="Athlete performance progression graph"
           aria-describedby="graph-description" style="max-width: 100%; height: auto;" />
       </article>
@@ -123,6 +127,7 @@
       <h2>Gallery</h2>
 
       <article class="gallery-grid">
+        <h3>Athlete Gallery Images</h3>
         {{ATHLETE_GALLERY_IMAGES}}
       </article>
     </section>
