@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ann Arbor Skyline</title>
+  <link rel="stylesheet" href="styles/reset.css">
 </head>
 
 <body>
@@ -13,7 +14,7 @@
     <div class="nav-container">
       <a href="#team-roster" class="nav-link">Roster</a>
       <a href="#team-accomplishments" class="nav-link">Accomplishments</a>
-      <a href="#team-comparison" class="nav-link">Comparison</a>
+      <a href="#player-comparison" class="nav-link">Comparison</a>
       <a href="#team-events" class="nav-link">Events</a>
       <a href="#team-gallery" class="nav-link">Gallery</a>
     </div>
@@ -23,84 +24,131 @@
     <h1>Ann Arbor Skyline</h1>
   </header>
 
-  <section id="team-roster">
-    <h2>The Athletes</h2>
+  <main>
 
-    <div id="sort-by-choices">
-      <label for="sort-by">Sort by:</label>
-      <select id="sort-by" name="sort-by">
-        <option value="name">Name</option>
-        <option value="grade">Grade</option>
-        <option value="season-record">Season Record (SR)</option>
-        <option value="personal-record">Personal Record (PR)</option>
-      </select>
+    <section id="team-roster">
+      <h2>The Athletes</h2>
+
+      <aside id="sort-by-choices">
+        <form>
+          <fieldset>
+            <legend>Sort Athletes</legend>
+
+            <p id="sort-instructions">
+              Choose a field to sort the athlete roster.
+            </p>
+
+            <label for="sort-by">Sort by:</label>
+            <select id="sort-by" name="sort-by" aria-describedby="sort-instructions">
+              <option value="name">Name</option>
+              <option value="grade">Grade</option>
+              <option value="season-record">Season Record (SR)</option>
+              <option value="personal-record">Personal Record (PR)</option>
+            </select>
+          </fieldset>
+        </form>
+      </aside>
+
+      <article id="athlete-roster">
+        {{ATHLETE_CARDS}}
+      </article>
+    </section>
+
+    <section id="team-accomplishments">
+      <h2>Team Accomplishments</h2>
+
+      <article>
+        <ul>
+          {{TEAM_ACCOMPLISHMENTS}}
+        </ul>
+      </article>
+    </section>
+
+    <section id="player-comparison">
+      <h2>Compare Athletes</h2>
+
+      <aside class="comparison-controls">
+        <form>
+          <fieldset>
+            <legend>Select Athletes to Compare</legend>
+
+            <p id="comparison-instructions">
+              Select two athletes from the dropdowns to compare their season
+              statistics and shared meets.
+            </p>
+
+            <div class="comparison-select">
+              <label for="athlete-a">Athlete A:</label>
+              <select id="athlete-a" name="athlete-a" aria-describedby="comparison-instructions">
+                {{ATHLETE_OPTIONS}}
+              </select>
+            </div>
+
+            <div class="comparison-select">
+              <label for="athlete-b">Athlete B:</label>
+              <select id="athlete-b" name="athlete-b" aria-describedby="comparison-instructions">
+                {{ATHLETE_OPTIONS}}
+              </select>
+            </div>
+
+            <button type="button" id="compare-button">
+              Compare
+            </button>
+          </fieldset>
+        </form>
+      </aside>
+
+      <article id="comparison-results">
+        {{PLAYER_COMPARISON}}
+      </article>
+    </section>
+
+    <section id="team-events">
+      <h2>Team Events</h2>
+
+      <article>
+        <table id="events-table">
+          <thead>
+            <tr>
+              <th>Race</th>
+              <th>Date</th>
+              <th>Placement</th>
+              <th>Results</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{TEAM_EVENTS_ROWS}}
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <section id="team-gallery">
+      <h2>Team Gallery</h2>
+
+      <article class="gallery-grid">
+        {{TEAM_GALLERY_IMAGES}}
+      </article>
+    </section>
+
+  </main>
+
+  <footer id="site-footer">
+    <div class="footer-content">
+      <p>
+        Ann Arbor Skyline Cross Country &middot;
+        Data sourced from
+        <a href="https://www.athletic.net" target="_blank" rel="noopener">
+          Athletic.net
+        </a>
+      </p>
+
+      <p>
+        Generated automatically for SI 338 &middot;
+        <span class="footer-year">2024</span>
+      </p>
     </div>
-
-    <div id="athlete-roster">
-      {{ATHLETE_CARDS}}
-    </div>
-  </section>
-
-  <section id="team-accomplishments">
-    <h2>Team Accomplishments</h2>
-    <ul>
-      {{TEAM_ACCOMPLISHMENTS}}
-    </ul>
-  </section>
-
-  <section id="player-comparison">
-    <h2>Compare Athletes</h2>
-
-    <div class="comparison-controls">
-      <div class="comparison-select">
-        <label for="athlete-a">Athlete A:</label>
-        <select id="athlete-a" name="athlete-a">
-          {{ATHLETE_OPTIONS}}
-        </select>
-      </div>
-
-      <div class="comparison-select">
-        <label for="athlete-b">Athlete B:</label>
-        <select id="athlete-b" name="athlete-b">
-          {{ATHLETE_OPTIONS}}
-        </select>
-      </div>
-
-      <button type="button" id="compare-button">
-        Compare
-      </button>
-    </div>
-
-    <div id="comparison-results">
-      {{PLAYER_COMPARISON}}
-    </div>
-  </section>
-
-  <section id="team-events">
-    <h2>Team Events</h2>
-
-    <table id="events-table">
-      <thead>
-        <tr>
-          <th>Race</th>
-          <th>Date</th>
-          <th>Placement</th>
-          <th>Results</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{TEAM_EVENTS_ROWS}}
-      </tbody>
-    </table>
-  </section>
-
-
-  <section id="team-gallery">
-    <h2>Team Gallery</h2>
-    <div class="gallery-grid">
-      {{TEAM_GALLERY_IMAGES}}
-    </div>
-  </section>
+  </footer>
 
 </body>
 

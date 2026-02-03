@@ -5,120 +5,146 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{NAME}}</title>
+  <link rel="stylesheet" href="../../styles/reset.css">
 </head>
 
 <body>
+
   <nav id="athlete-nav">
     <div class="nav-container">
       <span class="nav-title">Ann Arbor Skyline Athletes</span>
-      <a href="https://stefanjakov.github.io/si338-client-project-deliverable/" class="nav-link">Team page</a>
+      <a href="https://stefanjakov.github.io/si338-client-project-deliverable/" class="nav-link">
+        Team page
+      </a>
     </div>
   </nav>
 
   <header id="athlete-header">
-    <!-- >> maybe a litle hard to generate -->
-    <!-- <div class="athlete-branding"> -->
-    <!--   <img src="path/team_logo.png" alt="Team Logo" class="team-logo" /> -->
-    <!-- </div> -->
-
-    <div class="athlete-info">
+    <article class="athlete-info">
       <h1>{{NAME}}</h1>
+
       <img src="{{ATHLETE_PROFILE_PIC}}" alt="Athlete profile picture" class="athlete-photo" />
 
       <p class="athlete-school">Ann Arbor Skyline</p>
       <p class="athlete-grade">Current Grade: {{GRADE}}</p>
-      <a href="{{ATHLETE_URL}}"> Link to athlete.net account </a>
+
+      <a href="{{ATHLETE_URL}}">
+        Link to athlete.net account
+      </a>
 
       <div class="athlete-records">
         <p class="athlete-sr">Season Record (SR): {{SEASON_RECORD}}</p>
         <p class="athlete-pr">Personal Record (PR): {{PERSONAL_RECORD}}</p>
       </div>
-    </div>
+    </article>
   </header>
 
-  <section id="athlete-results">
-    <h2>Race Results</h2>
+  <main>
 
-    <div class="results-filters">
-      <label for="filter-location">Location:</label>
-      <input type="text" id="filter-location" name="filter-location" placeholder="Enter location" />
+    <section id="athlete-results">
+      <h2>Race Results</h2>
 
-      <label for="filter-date">Date:</label>
-      <input type="date" id="filter-date" name="filter-date" />
-    </div>
+      <aside class="results-filters">
+        <form>
+          <fieldset>
+            <legend>Filter Race Results</legend>
 
-    <table id="results-table">
-      <thead>
-        <tr>
-          <th>Race Name</th>
-          <th>Date</th>
-          <th>Location</th>
-          <th>Distance</th>
-          <th>Time</th>
-          <th>Place</th>
-          <th>Grade</th>
-          <th>Results</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Race Name</td>
-          <td>Date</td>
-          <td>Location</td>
-          <td>Distance</td>
-          <td>Time</td>
-          <td>Place</td>
-          <td>Grade</td>
-          <td>
-            <a href="https://www.athletic.net" target="_blank" View Results </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <p id="filter-instructions">
+              Use the fields below to filter race results by location or date.
+            </p>
 
-    <!-- this just does not exist in the csv.. -->
-    <!-- <p class="coach-comments"> -->
-    <!--   Coach Comment -->
-    <!-- </p> -->
-    <!-- </section> -->
+            <div class="filter-group">
+              <label for="filter-location">Location:</label>
+              <input type="text" id="filter-location" name="filter-location" placeholder="Enter location"
+                aria-describedby="filter-instructions" />
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-date">Date:</label>
+              <input type="date" id="filter-date" name="filter-date" aria-describedby="filter-instructions" />
+            </div>
+          </fieldset>
+        </form>
+      </aside>
+
+      <article>
+        <h3 class="visually-hidden">Results Table</h3>
+
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>Race Name</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Distance</th>
+              <th>Time</th>
+              <th>Place</th>
+              <th>Grade</th>
+              <th>Results</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Race Name</td>
+              <td>Date</td>
+              <td>Location</td>
+              <td>Distance</td>
+              <td>Time</td>
+              <td>Place</td>
+              <td>Grade</td>
+              <td>
+                <a href="https://www.athletic.net" target="_blank">
+                  View Results
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
 
     <section id="performance-graph">
       <h2>Performance Progression</h2>
 
-      <p>
-        This graph visualizes the athlete’s race times across meets,
-        color-coded by grade.
-      </p>
+      <aside>
+        <p id="graph-description">
+          This graph visualizes the athlete’s race times across meets,
+          color-coded by grade.
+        </p>
+      </aside>
 
-      <img src="{{PERFORMANCE_GRAPH}}" alt="Athlete performance progression graph"
-        style="max-width: 100%; height: auto;" />
+      <article>
+        <img src="{{PERFORMANCE_GRAPH}}" alt="Athlete performance progression graph"
+          aria-describedby="graph-description" style="max-width: 100%; height: auto;" />
+      </article>
     </section>
 
-    <!-- lowkey excluding this because i think a player gallery is a lot more important.. idk tho -->
-    <!-- <section id="athlete-comparison"> -->
-    <!--   <h2>Compare with Another Athlete</h2> -->
-    <!---->
-    <!--   <form id="athlete-comparison-form"> -->
-    <!--     <label for="compare-athlete">Athlete Name:</label> -->
-    <!--     <input type="text" id="compare-athlete" name="compare-athlete" placeholder="Search athlete" /> -->
-    <!---->
-    <!--     <button type="submit">Compare</button> -->
-    <!--   </form> -->
-    <!---->
-    <!--   <div id="comparison-results"> -->
-    <!--     <p>Select an athlete to view comparison data.</p> -->
-    <!--   </div> -->
-    <!-- </section> -->
-
-
-    <!-- yea.. probably better -->
     <section id="athlete-gallery">
       <h2>Gallery</h2>
 
-      <div class="gallery-grid">
+      <article class="gallery-grid">
         {{ATHLETE_GALLERY_IMAGES}}
-      </div>
+      </article>
     </section>
+
+  </main>
+
+  <footer id="site-footer">
+    <div class="footer-content">
+      <p>
+        Ann Arbor Skyline Cross Country &middot;
+        Data sourced from
+        <a href="https://www.athletic.net" target="_blank" rel="noopener">
+          Athletic.net
+        </a>
+      </p>
+
+      <p>
+        Generated automatically for SI 338 &middot;
+        <span class="footer-year">2024</span>
+      </p>
+    </div>
+  </footer>
 
 </body>
 
