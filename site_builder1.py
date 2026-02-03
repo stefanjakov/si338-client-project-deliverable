@@ -271,6 +271,7 @@ def main():
         template,
         {
             "NAME": ATHLETE_NAME,
+            "ATHLETE_URL": ATHLETE_URL,
             "GRADE": grade,
             "SEASON_RECORD": sr,
             "PERSONAL_RECORD": pr,
